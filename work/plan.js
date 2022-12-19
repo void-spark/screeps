@@ -5,7 +5,7 @@ function plan(spawn) {
     const extensionsAvailable = CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][room.controller.level];
     const extensions = room.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_EXTENSION);
 
-    if (extensionsAvailable >= extensions.length) {
+    if (extensionsAvailable > extensions.length) {
         const sites = room.find(FIND_CONSTRUCTION_SITES);
         if (sites.length == 0) {
             let step = 1;
