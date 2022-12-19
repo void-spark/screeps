@@ -46,7 +46,7 @@ module.exports.loop = function () {
     }
 
     const units = roles.map(role => `${role}: ${creepsByRole[role].length}`).join(', ');
-    const resources = `e: ${room.energyAvailable} / ${spawn.store.getCapacity(RESOURCE_ENERGY)}`;
+    const resources = `e: ${room.energyAvailable} / ${room.energyCapacityAvailable}`;
     room.visual.text(`${units} - ${resources}`, 2, 2, { font: 1.5, align: 'left', opacity: 0.7 });
 
 
