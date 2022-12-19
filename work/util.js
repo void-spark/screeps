@@ -8,11 +8,12 @@ exports.forSquare = (xCenter, yCenter, steps, spacing, callback) => {
             const yOnEdge = y == -outer || y == outer;
             if (xOnEdge || yOnEdge) {
                 if (callback(xCenter + x, yCenter + y)) {
-                    return;
+                    return true;
                 }
             }
         }
     }
+    return false;
 }
 
 exports.canBuild = (room, x, y) => {
