@@ -62,14 +62,29 @@ module.exports.loop = function () {
 
     const workersPerFreeSpace = 2;
 
+    // TODO: Would be nice to replace creeps if upgrades are wanted?
+    // Base on a list of what we want at all times?
     if (spawn.spawning) {
         var spawningCreep = Game.creeps[spawn.spawning.name];
         spawn.room.visual.text('🛠️' + spawningCreep.memory.role, spawn.pos.x + 1, spawn.pos.y, { align: 'left', opacity: 0.8 });
     } else if (workers.length < totalFree * workersPerFreeSpace) {
         var newName = 'Worker' + Game.time;
         console.log(`Spawning new worker: ${newName}`);
-        spawn.spawnCreep([WORK, CARRY, MOVE], newName,
-            { memory: { role: workerRole } });
+
+        let body;
+        if (room.energyCapacityAvailable >= 750) {
+            body = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]; // 750
+        } else if (room.energyCapacityAvailable >= 650) {
+            body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, WORK]; // 650
+        } else if (room.energyCapacityAvailable >= 500) {
+            body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 500
+        } else if (room.energyCapacityAvailable >= 400) {
+            body = [WORK, WORK, CARRY, MOVE, MOVE, MOVE]; // 400
+        } else {
+            body = [WORK, CARRY, MOVE, MOVE]; // 250
+        }
+
+        spawn.spawnCreep(body, newName, { memory: { role: workerRole } });
     }
 
     var tower = Game.getObjectById('0dedb3a4b26a35f52fb25eba');
@@ -91,6 +106,10 @@ module.exports.loop = function () {
 
     //workers.forEach(creep => roleWorker.run(creep));
     //creeps.forEach(creep => roleWorker.run(creep));
+
+
+    // TODO: Tasklist instead of each creep decides what it does?
+    // Longer term tasks are allocated on adjecency (of the source!)
 
     const creepIt = creeps[Symbol.iterator]();
     sources.forEach(source => {
