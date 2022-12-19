@@ -18,8 +18,6 @@ module.exports.loop = function () {
 
     const workers = creepsByRole[workerRole];
 
-    // TODO: Look into global? Can we store object refs there?
-
     if (!Memory.sources) {
         Memory.sources = {};
 
@@ -34,11 +32,6 @@ module.exports.loop = function () {
 
             Memory.sources[source.id] = { free: free };
         });
-
-
-        // if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-        //     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-        // }
     }
 
     const totalFree = Object.values(Memory.sources).map(source => source.free).reduce((acc, curr) => acc + curr);
