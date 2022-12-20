@@ -8,8 +8,8 @@ function plan(spawn) {
     if (extensionsAvailable > extensions.length) {
         const sites = room.find(FIND_CONSTRUCTION_SITES);
         if (sites.length == 0) {
-            let step = 1;
-            while (step < 3 && !forSquare(spawn.pos.x, spawn.pos.y, step, 1, (x, y) => {
+            let step = 3;
+            while (step < 5 && !forSquare(spawn.pos.x, spawn.pos.y, step, 1, (x, y) => {
                 const ok = canBuild(room, x, y);
                 if (ok) {
                     console.log(`Build at: ${x}, ${y}`);

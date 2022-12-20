@@ -1,6 +1,6 @@
-exports.forSquare = (xCenter, yCenter, steps, spacing, callback) => {
+exports.forSquare = (xCenter, yCenter, r, spacing, callback) => {
     const increase = spacing + 1;
-    const outer = steps * increase;
+    const outer = r;
 
     for (let x = -outer; x <= outer; x += increase) {
         const xOnEdge = x == -outer || x == outer;
