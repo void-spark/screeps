@@ -8,6 +8,10 @@ module.exports.loop = function () {
     const roles = [workerRole];
 
     const spawn = Game.spawns['Spawn1'];
+    if(!spawn) {
+        return;        
+    }
+
     const room = spawn.room;
 
     const creeps = Object.values(Game.creeps);
@@ -67,7 +71,7 @@ module.exports.loop = function () {
     if (spawn.spawning) {
         var spawningCreep = Game.creeps[spawn.spawning.name];
         spawn.room.visual.text('🛠️' + spawningCreep.memory.role, spawn.pos.x + 1, spawn.pos.y, { align: 'left', opacity: 0.8 });
-    } else if (workers.length < totalFree * workersPerFreeSpace) {
+    } else if (workers.length < totalFree * workersPerFreeSpace && room.energyAvailable > 250) {
         var newName = 'Worker' + Game.time;
         console.log(`Spawning new worker: ${newName}`);
 
