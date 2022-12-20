@@ -1,6 +1,7 @@
 var roleWorker = require('role.worker');
 var plan = require('plan');
-var { notBlocked, forSquare } = require('util');
+var { notBlocked, forSquare, calcBodyCost } = require('util');
+var { plainWorker } = require('data');
 
 module.exports.loop = function () {
 
@@ -71,24 +72,20 @@ module.exports.loop = function () {
     if (spawn.spawning) {
         var spawningCreep = Game.creeps[spawn.spawning.name];
         spawn.room.visual.text('🛠️' + spawningCreep.memory.role, spawn.pos.x + 1, spawn.pos.y, { align: 'left', opacity: 0.8 });
-    } else if (workers.length < totalFree * workersPerFreeSpace && room.energyAvailable > 250) {
-        var newName = 'Worker' + Game.time;
-        console.log(`Spawning new worker: ${newName}`);
-
-        let body;
-        if (room.energyCapacityAvailable >= 750) {
-            body = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]; // 750
-        } else if (room.energyCapacityAvailable >= 650) {
-            body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, WORK]; // 650
-        } else if (room.energyCapacityAvailable >= 500) {
-            body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 500
-        } else if (room.energyCapacityAvailable >= 400) {
-            body = [WORK, WORK, CARRY, MOVE, MOVE, MOVE]; // 400
-        } else {
-            body = [WORK, CARRY, MOVE, MOVE]; // 250
+    } else if (workers.length < totalFree * workersPerFreeSpace) {
+        let body, cost;
+        for(const candidateBody of plainWorker) {
+            cost = calcBodyCost(candidateBody);
+            if(room.energyCapacityAvailable >= cost) {
+                body = candidateBody;
+                break;
+            }
         }
-
-        spawn.spawnCreep(body, newName, { memory: { role: workerRole } });
+        if(room.energyAvailable >= cost) {
+            var newName = 'Worker' + Game.time;
+            console.log(`Spawning: ${newName} with body: ${body} for ${cost}e`);
+            spawn.spawnCreep(body, newName, { memory: { role: workerRole } });
+        }
     }
 
     var tower = Game.getObjectById('0dedb3a4b26a35f52fb25eba');

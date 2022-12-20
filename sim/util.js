@@ -41,3 +41,5 @@ exports.notBlocked = (room, x, y) => {
     });
     return ok;
 }
+
+exports.calcBodyCost = (body) => _.sum(body.map(part => BODYPART_COST[part]));
